@@ -46,4 +46,47 @@ public class UserApiTest {
         assertNotNull(users);
         assertEquals(users.size(), 10);
     }
+
+    @Test
+    public void testCreateUser() {
+        String requestBody = """
+            {
+                "name": "Test User",
+                "username": "testuser",
+                "email": "testuser@example.com"
+            }
+            """;
+
+        Response response = userService.createUser(requestBody);
+
+        assertEquals(response.getStatusCode(), 201);
+        assertEquals(response.jsonPath().getString("name"), "Test User");
+        assertEquals(response.jsonPath().getString("username"), "testuser");
+        assertEquals(response.jsonPath().getString("email"), "testuser@example.com");
+    }
+
+    @Test
+    public void testUpdateUser() {
+        String requestBody = """
+            {
+                "name": "Updated User",
+                "username": "updateduser",
+                "email": "updateduser@example.com"
+            }
+            """;
+
+        Response response = userService.updateUser(1, requestBody);
+
+        assertEquals(response.getStatusCode(), 200);
+        assertEquals(response.jsonPath().getString("name"), "Updated User");
+        assertEquals(response.jsonPath().getString("username"), "updateduser");
+        assertEquals(response.jsonPath().getString("email"), "updateduser@example.com");
+    }
+
+    @Test
+    public void testDeleteUser() {
+        Response response = userService.deleteUser(1);
+
+        assertEquals(response.getStatusCode(), 200);
+    }
 }
